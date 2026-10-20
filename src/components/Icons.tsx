@@ -8,7 +8,7 @@ const stroke = {
 
 export function EraserIcon() {
   return (
-    <svg viewBox="0 0 24 24" width="40" height="40" aria-hidden {...stroke}>
+    <svg viewBox="0 0 24 24" width="34" height="34" aria-hidden {...stroke}>
       <path d="M13.6 4.4a1.6 1.6 0 0 1 2.3 0l3.7 3.7a1.6 1.6 0 0 1 0 2.3L11.5 18.5H8L4.4 14.9a1.6 1.6 0 0 1 0-2.3z" />
       <path d="M8.6 9.4l6 6" />
       <path d="M14 20.5h6" />
@@ -18,7 +18,7 @@ export function EraserIcon() {
 
 export function PencilIcon() {
   return (
-    <svg viewBox="0 0 24 24" width="40" height="40" aria-hidden {...stroke}>
+    <svg viewBox="0 0 24 24" width="34" height="34" aria-hidden {...stroke}>
       <path d="M15.6 4.6a2 2 0 0 1 2.8 2.8L8.5 17.3l-3.8 1 1-3.8z" />
       <path d="M13.8 6.4l2.8 2.8" />
       <path d="M13 20.5h7" />
@@ -28,7 +28,7 @@ export function PencilIcon() {
 
 export function CheckIcon() {
   return (
-    <svg viewBox="0 0 43 43" width="42" height="42" aria-hidden>
+    <svg viewBox="0 0 43 43" width="36" height="36" aria-hidden>
       <path
         fill="currentColor"
         d="M33.082 12.87a1.5 1.5 0 0 1 2.246 1.98l-.124.142L19.56 30.635a1.5 1.5 0 0 1-1.98.125l-.142-.125-7.324-7.324a1.5 1.5 0 0 1 1.98-2.246l.141.124 6.264 6.263z"
