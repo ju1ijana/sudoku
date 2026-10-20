@@ -404,26 +404,33 @@ button.primary:hover {
 .modal {
   background: #fff;
   border-radius: 8px;
-  padding: 24px 27px;
-  width: 323px;
+  padding: 20px 22px;
+  width: 280px;
+  font-size: 14px;
   box-shadow: 0 8px 34px rgb(0 0 0 / 0.2);
 }
 
 .modal h2 {
-  margin: 0 0 10px;
+  margin: 0 0 8px;
+  font-size: 18px;
   font-weight: 500;
 }
 
 .modal p {
+  margin: 0;
   color: var(--muted);
-  line-height: 1.5;
+  line-height: 1.45;
 }
 
 .modal-actions {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
-  margin-top: 17px;
+  margin-top: 16px;
+}
+
+.modal button {
+  padding: 7px 13px;
 }
 
 .modal-actions button:not(.primary):hover {
