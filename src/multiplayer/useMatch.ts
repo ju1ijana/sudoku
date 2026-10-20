@@ -124,7 +124,7 @@ export function useMatch() {
           dispatch({ type: 'opponentProgress', snapshot: msg.snapshot })
           return
         case 'rematch':
-          dispatch({ type: 'rematch', who: 'opponent' })
+          dispatch({ type: 'rematch' })
           return
         case 'leave':
           connRef.current?.close()
@@ -241,7 +241,7 @@ export function useMatch() {
   )
 
   const requestRematch = useCallback(() => {
-    dispatch({ type: 'rematch', who: 'me' })
+    dispatch({ type: 'rematch' })
     send({ type: 'rematch' })
   }, [send])
 
@@ -288,17 +288,11 @@ export function useMatch() {
     else send({ type: finished ? 'finished' : 'eliminated' })
   }, [state.game, state.phase, state.role, send, decide])
 
-  // The host starts a rematch once both players asked for one.
+  // The host starts a rematch as soon as either player asks for one.
   useEffect(() => {
-    if (
-      state.role === 'host' &&
-      state.phase === 'results' &&
-      state.rematch.me &&
-      state.rematch.opponent &&
-      !state.opponentLeft
-    )
+    if (state.role === 'host' && state.phase === 'results' && state.rematchRequested && !state.opponentLeft)
       void startMatch()
-  }, [state.role, state.phase, state.rematch, state.opponentLeft, startMatch])
+  }, [state.role, state.phase, state.rematchRequested, state.opponentLeft, startMatch])
 
   // Tell the opponent when the tab closes, and clean up on unmount.
   useEffect(() => {

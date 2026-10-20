@@ -65,16 +65,11 @@ describe('matchReducer', () => {
     expect(guestView.result).toEqual({ winner: 'opponent', reason: 'eliminated' })
   })
 
-  it('resets rematch requests when a new race starts', () => {
-    let s = run(
-      racing(),
-      { type: 'result', winner: 'host', reason: 'finished' },
-      { type: 'rematch', who: 'me' },
-      { type: 'rematch', who: 'opponent' },
-    )
-    expect(s.rematch).toEqual({ me: true, opponent: true })
+  it('clears the rematch request when the new race starts', () => {
+    let s = run(racing(), { type: 'result', winner: 'host', reason: 'finished' }, { type: 'rematch' })
+    expect(s.rematchRequested).toBe(true)
     s = run(s, { type: 'start', puzzle })
-    expect(s.rematch).toEqual({ me: false, opponent: false })
+    expect(s.rematchRequested).toBe(false)
     expect(s.result).toBeNull()
   })
 })

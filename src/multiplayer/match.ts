@@ -24,7 +24,7 @@ export interface MatchState {
   game: GameState | null
   opponentSnapshot: Snapshot | null
   result: MatchResult | null
-  rematch: { me: boolean; opponent: boolean }
+  rematchRequested: boolean // either player asked for a rematch; the host starts it
   opponentLeft: boolean
   error: string | null
 }
@@ -38,7 +38,7 @@ export type MatchAction =
   | { type: 'game'; action: GameAction }
   | { type: 'opponentProgress'; snapshot: Snapshot }
   | { type: 'result'; winner: Role; reason: ResultReason }
-  | { type: 'rematch'; who: 'me' | 'opponent' }
+  | { type: 'rematch' }
   | { type: 'opponentLeft' }
   | { type: 'error'; message: string }
   | { type: 'reset' }
@@ -55,7 +55,7 @@ export const initialMatch: MatchState = {
   game: null,
   opponentSnapshot: null,
   result: null,
-  rematch: { me: false, opponent: false },
+  rematchRequested: false,
   opponentLeft: false,
   error: null,
 }
@@ -87,7 +87,7 @@ export function matchReducer(state: MatchState, action: MatchAction): MatchState
         game: null,
         opponentSnapshot: emptySnapshot(action.puzzle),
         result: null,
-        rematch: { me: false, opponent: false },
+        rematchRequested: false,
       }
 
     case 'countdownTick': {
@@ -114,7 +114,7 @@ export function matchReducer(state: MatchState, action: MatchAction): MatchState
       }
 
     case 'rematch':
-      return { ...state, rematch: { ...state.rematch, [action.who]: true } }
+      return { ...state, rematchRequested: true }
 
     case 'opponentLeft':
       return { ...state, opponentLeft: true }

@@ -73,8 +73,7 @@ export function Results({ match, onRematch, onMenu }: ResultsProps) {
 
   let rematchNote = ''
   if (match.opponentLeft) rematchNote = `${opponentName} has left.`
-  else if (match.rematch.me) rematchNote = `Waiting for ${opponentName}…`
-  else if (match.rematch.opponent) rematchNote = `${opponentName} wants a rematch!`
+  else if (match.rematchRequested) rematchNote = 'Starting a new game…'
 
   return (
     <div className="results">
@@ -96,7 +95,7 @@ export function Results({ match, onRematch, onMenu }: ResultsProps) {
 
       <div className="results-actions">
         <button onClick={onMenu}>Main menu</button>
-        <button className="primary" onClick={onRematch} disabled={match.rematch.me || match.opponentLeft}>
+        <button className="primary" onClick={onRematch} disabled={match.rematchRequested || match.opponentLeft}>
           Rematch
         </button>
       </div>
