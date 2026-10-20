@@ -40,7 +40,7 @@ export function SinglePlayer({ onMenu }: { onMenu: () => void }) {
   useKeyboard(acceptsKeys, dispatch)
 
   return (
-    <main className="app">
+    <main className="app single">
       <div className="game">
         <div className="board-column">
           <div className="top-bar">
@@ -73,7 +73,11 @@ export function SinglePlayer({ onMenu }: { onMenu: () => void }) {
 
         {game && (
           <aside className="side-panel">
-            <StatusBar game={game} onTogglePause={() => dispatch({ type: 'togglePause' })} />
+            <StatusBar
+              game={game}
+              onTogglePause={() => dispatch({ type: 'togglePause' })}
+              difficultyPicker={{ current: difficulty, onSelect: requestNewGame }}
+            />
             <Controls
               game={game}
               onInput={(digit) => dispatch({ type: 'input', digit })}

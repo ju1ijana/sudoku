@@ -27,7 +27,7 @@ export function useKeyboard(enabled: boolean, dispatch: (action: GameAction) => 
     if (!enabled) return
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.ctrlKey || e.metaKey || e.altKey) return
-      if (e.target instanceof HTMLInputElement) return
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement) return
       const action = keyToAction(e)
       if (!action) return
       e.preventDefault()

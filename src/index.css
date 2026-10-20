@@ -27,7 +27,7 @@
 
 body {
   margin: 0;
-  min-width: 1024px;
+  -webkit-tap-highlight-color: transparent;
 }
 
 button {
@@ -38,6 +38,7 @@ button {
   color: var(--text);
   border-radius: 4px;
   padding: 8px 15px;
+  touch-action: manipulation;
 }
 
 button:disabled {
@@ -140,7 +141,7 @@ button.primary:hover {
   justify-content: center;
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
-  font-size: 39px;
+  font-size: calc(var(--cell) * 0.7);
   font-weight: 300;
   cursor: pointer;
   background: var(--bg);
@@ -203,7 +204,7 @@ button.primary:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
+  font-size: calc(var(--cell) * 0.2);
   font-weight: 400;
   line-height: 1;
   color: var(--muted);
@@ -425,7 +426,7 @@ button.primary:hover {
   background: #fff;
   border-radius: 8px;
   padding: 20px 22px;
-  width: 280px;
+  width: min(280px, calc(100vw - 80px));
   font-size: 14px;
   box-shadow: 0 8px 34px rgb(0 0 0 / 0.2);
 }
@@ -500,7 +501,8 @@ button.primary:hover {
 }
 
 .setup {
-  width: 360px;
+  width: 100%;
+  max-width: 360px;
   margin-inline: auto;
   align-items: stretch;
 }
@@ -670,6 +672,7 @@ button.primary:hover {
   font-size: 11px;
   color: var(--faint);
   user-select: all;
+  overflow-wrap: anywhere;
 }
 
 .players {
@@ -804,7 +807,9 @@ button.primary:hover {
 
 .results-boards {
   display: flex;
-  gap: 40px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px 40px;
 }
 
 .player-result {
@@ -835,7 +840,6 @@ button.primary:hover {
 }
 
 .board.mini .cell {
-  font-size: 22px;
   cursor: default;
 }
 
@@ -880,4 +884,191 @@ button.primary:hover {
   margin: 10px 0 0;
   color: var(--accent);
   font-weight: 500;
+}
+
+/* Difficulty dropdown: only used in the narrow layout */
+
+.difficulty-picker {
+  display: none;
+}
+
+.difficulty-picker select {
+  appearance: none;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--muted);
+  border: none;
+  padding: 0 16px 0 0;
+  field-sizing: content; /* fit the chosen option where supported */
+  background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236e7c8c' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+    no-repeat right center;
+  cursor: pointer;
+  outline: none;
+}
+
+/* Narrow screens and phones: one column - stats, board, tools, numbers */
+
+@media (max-width: 900px) {
+  :root {
+    --cell: min(56px, calc((100vw - 20px) / 9));
+  }
+
+  .app {
+    padding: 8px 8px 16px;
+  }
+
+  .game {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    width: calc(var(--cell) * 9 + 4px);
+  }
+
+  .board-column,
+  .side-panel {
+    display: contents;
+  }
+
+  .top-bar {
+    order: 0;
+    height: auto;
+    margin-bottom: 6px;
+  }
+
+  .top-bar .difficulty-bar {
+    display: none;
+  }
+
+  .status-bar {
+    order: 1;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: end;
+    margin-bottom: 8px;
+    padding: 0 2px;
+  }
+
+  .difficulty-picker {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .stat-label {
+    font-size: 12px;
+  }
+
+  .stat-value {
+    font-size: 15px;
+  }
+
+  .mistakes-stat {
+    grid-column: 2;
+    align-items: center;
+  }
+
+  .stat.time {
+    grid-column: 3;
+    justify-self: end;
+  }
+
+  .board-wrap {
+    order: 2;
+  }
+
+  .actions {
+    order: 3;
+    justify-content: space-evenly;
+    margin: 12px 0 4px;
+  }
+
+  .action {
+    width: 52px;
+    height: 52px;
+  }
+
+  .action svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .badge {
+    top: -7px;
+    right: -14px;
+    font-size: 10px;
+    line-height: 13px;
+  }
+
+  .numpad {
+    order: 4;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 0;
+  }
+
+  .num,
+  .num.done {
+    height: calc(var(--cell) * 1.15);
+    background: none;
+    font-size: calc(var(--cell) * 0.8);
+  }
+
+  .num:hover:not(:disabled) {
+    background: none;
+  }
+
+  .num:active:not(:disabled) {
+    background: var(--tile);
+  }
+
+  .num.done svg {
+    width: 70%;
+    height: 70%;
+  }
+
+  .new-game {
+    order: 5;
+    height: 44px;
+    margin-top: 8px;
+    font-size: 15px;
+  }
+
+  .single .new-game {
+    display: none;
+  }
+
+  /* Two players */
+
+  .race-layout {
+    width: calc(var(--cell) * 9 + 4px);
+  }
+
+  .race {
+    gap: 4px;
+    margin-bottom: 10px;
+  }
+
+  .race-row {
+    grid-template-columns: minmax(0, 72px) 1fr 14px auto auto;
+    gap: 6px;
+    font-size: 11px;
+  }
+
+  .race-flag svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .start-screen,
+  .setup,
+  .results {
+    margin-top: 16px;
+  }
+
+  .results h1 {
+    font-size: 26px;
+  }
+
+  .board.mini {
+    --cell: min(36px, calc((100vw - 24px) / 9));
+  }
 }

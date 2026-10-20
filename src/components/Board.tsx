@@ -35,7 +35,7 @@ export function Board({ cells, selected = null, onSelect, size = 'normal' }: Boa
             role="gridcell"
             aria-selected={i === selected}
             className={classes.filter(Boolean).join(' ')}
-            onMouseDown={onSelect && (() => onSelect(i))}
+            onPointerDown={onSelect && (() => onSelect(i))}
           >
             {cell.value !== 0 ? (
               cell.value
