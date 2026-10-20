@@ -134,7 +134,7 @@ export function MultiPlayer({ initialCode, onMenu }: MultiPlayerProps) {
           <aside className="side-panel">
             {game && (
               <>
-                <StatusBar game={game} />
+                <StatusBar game={game} showDifficulty />
                 <Controls
                   game={game}
                   onInput={(digit) => gameAction({ type: 'input', digit })}
