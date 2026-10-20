@@ -1,8 +1,9 @@
-export const DIFFICULTIES = ['Easy', 'Medium', 'Hard'] as const
+export const DIFFICULTIES = ['Easy', 'Medium', 'Hard', 'Extreme'] as const
 export type Difficulty = (typeof DIFFICULTIES)[number]
 
 /** A puzzle as 81 numbers in row-major order; 0 marks an empty cell. */
 export interface Puzzle {
+  id: string
   givens: number[]
   solution: number[]
   difficulty: Difficulty

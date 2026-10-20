@@ -20,6 +20,7 @@ const puzzle: Puzzle = {
   givens: SOLUTION.map((v, i) => (EMPTY.has(i) ? 0 : v)),
   solution: SOLUTION,
   difficulty: 'Easy',
+  id: 'test',
 }
 
 const run = (state: GameState, ...actions: GameAction[]) => actions.reduce(gameReducer, state)

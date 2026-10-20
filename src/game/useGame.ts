@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react'
-import { fetchPuzzle } from './dosuku'
+import { fetchPuzzle } from './puzzles'
 import { gameReducer, newGame, type GameAction } from './state'
 import { DIFFICULTIES, type Difficulty, type GameState, type Puzzle } from './types'
 
@@ -13,11 +13,14 @@ function reducer(state: GameState | null, action: Action): GameState | null {
   return state && gameReducer(state, action)
 }
 
-/** Restores an unfinished game from the last visit, paused so the clock doesn't run unseen. */
+/**
+ * Restores an unfinished game from the last visit, paused so the clock doesn't run unseen.
+ * Games without a puzzle id predate the puzzle bank (they came from Dosuku) and are dropped.
+ */
 function loadSavedGame(): GameState | null {
   try {
     const saved = JSON.parse(localStorage.getItem(SAVE_KEY) ?? 'null') as GameState | null
-    return saved?.status === 'playing' && saved.cells?.length === 81 ? { ...saved, paused: true } : null
+    return saved?.status === 'playing' && saved.puzzle?.id && saved.cells?.length === 81 ? { ...saved, paused: true } : null
   } catch {
     return null
   }
