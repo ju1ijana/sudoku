@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Board } from './components/Board'
 import { Controls } from './components/Controls'
+import { DifficultyBar } from './components/DifficultyBar'
+import { PlayIcon } from './components/Icons'
 import { Modal } from './components/Modal'
 import { StatusBar } from './components/StatusBar'
 import { formatTime } from './game/format'
 import { DIFFICULTIES, MAX_MISTAKES, type Difficulty } from './game/types'
 import { useGame } from './game/useGame'
 import type { GameAction } from './game/state'
+import type { GameState } from './game/types'
 
 const ARROWS: Record<string, [number, number]> = {
   ArrowUp: [-1, 0],
@@ -28,16 +31,32 @@ function keyToAction(e: KeyboardEvent): GameAction | null {
   return null
 }
 
+/** Whether starting a new game would throw away anything the player did. */
+function hasProgress(game: GameState | null): boolean {
+  return (
+    game?.status === 'playing' &&
+    (game.mistakes > 0 || game.cells.some((c) => !c.given && (c.value !== 0 || c.notes.length > 0)))
+  )
+}
+
 function App() {
   const { game, dispatch, difficulty, loading, error, startGame } = useGame()
   const [choosingDifficulty, setChoosingDifficulty] = useState(false)
+  const [confirmDifficulty, setConfirmDifficulty] = useState<Difficulty | null>(null)
 
   const newGame = (d: Difficulty) => {
     setChoosingDifficulty(false)
+    setConfirmDifficulty(null)
     void startGame(d)
   }
 
-  const acceptsKeys = game?.status === 'playing' && !game.paused && !loading && !choosingDifficulty && !error
+  const requestNewGame = (d: Difficulty) => {
+    if (hasProgress(game)) setConfirmDifficulty(d)
+    else newGame(d)
+  }
+
+  const acceptsKeys =
+    game?.status === 'playing' && !game.paused && !loading && !choosingDifficulty && !confirmDifficulty && !error
   useEffect(() => {
     if (!acceptsKeys) return
     const onKeyDown = (e: KeyboardEvent) => {
@@ -53,13 +72,9 @@ function App() {
 
   return (
     <main className="app">
-      <header className="app-header">
-        <h1>Sudoku</h1>
-      </header>
-
       <div className="game">
         <div className="board-column">
-          {game && <StatusBar game={game} onTogglePause={() => dispatch({ type: 'togglePause' })} />}
+          <DifficultyBar current={difficulty} onSelect={requestNewGame} />
           <div className="board-wrap">
             {game ? (
               <Board game={game} onSelect={(index) => dispatch({ type: 'select', index })} />
@@ -74,8 +89,8 @@ function App() {
             )}
             {!loading && game?.paused && (
               <div className="board-overlay">
-                <button className="primary" onClick={() => dispatch({ type: 'togglePause' })}>
-                  ▶ Resume
+                <button className="resume" onClick={() => dispatch({ type: 'togglePause' })} aria-label="Resume">
+                  <PlayIcon />
                 </button>
               </div>
             )}
@@ -83,15 +98,34 @@ function App() {
         </div>
 
         {game && (
-          <Controls
-            game={game}
-            onInput={(digit) => dispatch({ type: 'input', digit })}
-            onErase={() => dispatch({ type: 'erase' })}
-            onToggleNotes={() => dispatch({ type: 'toggleNotes' })}
-            onNewGame={() => setChoosingDifficulty(true)}
-          />
+          <aside className="side-panel">
+            <StatusBar game={game} onTogglePause={() => dispatch({ type: 'togglePause' })} />
+            <Controls
+              game={game}
+              onInput={(digit) => dispatch({ type: 'input', digit })}
+              onErase={() => dispatch({ type: 'erase' })}
+              onToggleNotes={() => dispatch({ type: 'toggleNotes' })}
+              onNewGame={() => setChoosingDifficulty(true)}
+            />
+          </aside>
         )}
       </div>
+
+      {confirmDifficulty && (
+        <Modal
+          title={`Start a new ${confirmDifficulty} game?`}
+          actions={
+            <>
+              <button onClick={() => setConfirmDifficulty(null)}>Cancel</button>
+              <button className="primary" onClick={() => newGame(confirmDifficulty)}>
+                New game
+              </button>
+            </>
+          }
+        >
+          <p>Your current progress will be lost.</p>
+        </Modal>
+      )}
 
       {choosingDifficulty && (
         <Modal
@@ -100,7 +134,7 @@ function App() {
             <button onClick={() => setChoosingDifficulty(false)}>Cancel</button>
           }
         >
-          {game?.status === 'playing' && <p>Your current game will be lost.</p>}
+          {hasProgress(game) && <p>Your current progress will be lost.</p>}
           <div className="difficulty-list">
             {DIFFICULTIES.map((d) => (
               <button key={d} className="primary" onClick={() => newGame(d)}>
