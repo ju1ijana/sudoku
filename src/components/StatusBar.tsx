@@ -4,7 +4,7 @@ import { PauseIcon, PlayIcon } from './Icons'
 
 interface StatusBarProps {
   game: GameState
-  onTogglePause: () => void
+  onTogglePause?: () => void
 }
 
 export function StatusBar({ game, onTogglePause }: StatusBarProps) {
@@ -21,15 +21,17 @@ export function StatusBar({ game, onTogglePause }: StatusBarProps) {
           <span className="stat-label">Time</span>
           <span className="stat-value">{formatTime(game.elapsed)}</span>
         </div>
-        <button
-          className="pause"
-          onClick={onTogglePause}
-          disabled={game.status !== 'playing'}
-          aria-label={game.paused ? 'Resume' : 'Pause'}
-          title={game.paused ? 'Resume' : 'Pause'}
-        >
-          {game.paused ? <PlayIcon /> : <PauseIcon />}
-        </button>
+        {onTogglePause && (
+          <button
+            className="pause"
+            onClick={onTogglePause}
+            disabled={game.status !== 'playing'}
+            aria-label={game.paused ? 'Resume' : 'Pause'}
+            title={game.paused ? 'Resume' : 'Pause'}
+          >
+            {game.paused ? <PlayIcon /> : <PauseIcon />}
+          </button>
+        )}
       </div>
     </div>
   )

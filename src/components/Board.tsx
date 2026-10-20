@@ -1,19 +1,20 @@
 import { boxOf, colOf, rowOf } from '../game/state'
-import type { GameState } from '../game/types'
+import type { Cell } from '../game/types'
 
 interface BoardProps {
-  game: GameState
-  onSelect: (index: number) => void
+  cells: Cell[]
+  selected?: number | null
+  onSelect?: (index: number) => void
+  size?: 'normal' | 'mini'
 }
 
 const DIGITS = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-export function Board({ game, onSelect }: BoardProps) {
-  const { cells, selected } = game
+export function Board({ cells, selected = null, onSelect, size = 'normal' }: BoardProps) {
   const selectedValue = selected === null ? 0 : cells[selected].value
 
   return (
-    <div className="board" role="grid" aria-label="Sudoku board">
+    <div className={size === 'mini' ? 'board mini' : 'board'} role="grid" aria-label="Sudoku board">
       {cells.map((cell, i) => {
         const related =
           selected !== null &&
@@ -34,7 +35,7 @@ export function Board({ game, onSelect }: BoardProps) {
             role="gridcell"
             aria-selected={i === selected}
             className={classes.filter(Boolean).join(' ')}
-            onMouseDown={() => onSelect(i)}
+            onMouseDown={onSelect && (() => onSelect(i))}
           >
             {cell.value !== 0 ? (
               cell.value

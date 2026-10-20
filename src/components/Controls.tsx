@@ -7,10 +7,10 @@ interface ControlsProps {
   onInput: (digit: number) => void
   onErase: () => void
   onToggleNotes: () => void
-  onNewGame: () => void
+  mainButton: { label: string; onClick: () => void }
 }
 
-export function Controls({ game, onInput, onErase, onToggleNotes, onNewGame }: ControlsProps) {
+export function Controls({ game, onInput, onErase, onToggleNotes, mainButton }: ControlsProps) {
   const counts = digitCounts(game)
   const disabled = game.status !== 'playing' || game.paused
 
@@ -47,8 +47,8 @@ export function Controls({ game, onInput, onErase, onToggleNotes, onNewGame }: C
         )}
       </div>
 
-      <button className="new-game" onClick={onNewGame}>
-        New Game
+      <button className="new-game" onClick={mainButton.onClick}>
+        {mainButton.label}
       </button>
     </>
   )
